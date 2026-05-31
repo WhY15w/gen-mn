@@ -30,6 +30,6 @@ for i, group in enumerate(groups, 1):
 
     moment_data = np.array(moment_data)
     axial_data = np.array(axial_data)
-    output_path = f"./img/Figure_{i}.svg"
-    generate_diagram(moment_data, axial_data, output_path)
+    output_path = f"./img/Figure_{i}.png"
+    generate_diagram(moment_data, axial_data, output_path, flip_moment=(i == 1))
     print(f"Figure_{i}.svg 已保存")
