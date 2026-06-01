@@ -5,13 +5,13 @@ plt.rcParams["font.family"] = "Times New Roman"
 
 
 def generate_diagram(moment_data, axial_data, output_path):
-    R = 2.5
+    R = 3
 
-    moment_scale = 0.8 / max(np.max(moment_data) - np.min(moment_data), 1)
+    moment_scale = 1.2 / max(np.max(moment_data) - np.min(moment_data), 1)
     axial_scale = 0.8 / max(np.max(axial_data) - np.min(axial_data), 1)
 
     theta_m = np.linspace(np.pi / 2, 3 * np.pi / 2, len(moment_data))
-    theta_n = np.linspace(-np.pi / 2, np.pi / 2, len(axial_data))
+    theta_n = np.linspace(np.pi / 2, -np.pi / 2, len(axial_data))
 
     x_m = R * np.cos(theta_m)
     y_m = R * np.sin(theta_m)
@@ -23,8 +23,8 @@ def generate_diagram(moment_data, axial_data, output_path):
     nx_n = x_n / R
     ny_n = y_n / R
 
-    x_force_m = x_m + moment_data * moment_scale * nx_m
-    y_force_m = y_m + moment_data * moment_scale * ny_m
+    x_force_m = x_m - moment_data * moment_scale * nx_m
+    y_force_m = y_m - moment_data * moment_scale * ny_m
     x_force_n = x_n + axial_data * axial_scale * nx_n
     y_force_n = y_n + axial_data * axial_scale * ny_n
 
@@ -33,9 +33,9 @@ def generate_diagram(moment_data, axial_data, output_path):
     theta_full = np.linspace(0, 2 * np.pi, 400)
     x_circle = R * np.cos(theta_full)
     y_circle = R * np.sin(theta_full)
-    ax.plot(x_circle, y_circle, color="black", linewidth=2)
+    ax.plot(x_circle, y_circle, color="black", linewidth=1.5)
 
-    ax.plot(x_force_m, y_force_m, color="black", linewidth=1.5, label="弯矩图")
+    ax.plot(x_force_m, y_force_m, color="black", linewidth=1, label="弯矩图")
 
     for i in range(0, len(x_m), 2):
         ax.plot(
@@ -47,14 +47,14 @@ def generate_diagram(moment_data, axial_data, output_path):
         value = moment_data[i]
         offset = 0.2
         if value >= 0:
-            text_x = x_force_m[i] + offset * nx_m[i]
-            text_y = y_force_m[i] + offset * ny_m[i]
-        else:
             text_x = x_force_m[i] - offset * nx_m[i]
             text_y = y_force_m[i] - offset * ny_m[i]
+        else:
+            text_x = x_force_m[i] + offset * nx_m[i]
+            text_y = y_force_m[i] + offset * ny_m[i]
         ax.text(text_x, text_y, f"{value:.1f}", fontsize=18, ha="center", va="center")
 
-    ax.plot(x_force_n, y_force_n, color="black", linewidth=1.5, label="轴力图")
+    ax.plot(x_force_n, y_force_n, color="black", linewidth=1, label="轴力图")
 
     for i in range(0, len(x_n), 2):
         ax.plot(
